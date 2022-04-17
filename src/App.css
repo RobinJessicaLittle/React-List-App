@@ -110,7 +110,8 @@ body{
     -webkit-backdrop-filter: blur(9.1px);
     max-width: 4%;
     resize:none;
-    margin-left: 80%;
+    margin-left: 5%;
+    margin-bottom: 20px;
     padding: 2%;
 }
 
