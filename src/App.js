@@ -66,7 +66,7 @@ const addTask = () => {
       <div id="formInput">
           <div id= 'additemcontainer'>
         <input id= 'typehere' placeholder="Type here" onChange={updateInputText}/>
-        <button id= 'add' onClick={addTask}>Add</button>
+        <button data-testis = 'addTest' id= 'add' onClick={addTask}>Add</button>
         </div>
         {tasks.map((item, index) => {
           return (
@@ -88,7 +88,7 @@ const addTask = () => {
                   <button onClick={() => setInputTextoEditing (tasks.setInputTextoEditing)}>Edit</button>
                 )} */}
 
-              <button onClick={deleteTask}>< img id = 'trash'src={trash} alt= 'delete'/></button>
+              <button data-testid ='deletetest' onClick={deleteTask}>< img id = 'trash'src={trash} alt= 'delete'/></button>
               
             </div>
           )
