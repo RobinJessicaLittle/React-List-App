@@ -1,104 +1,104 @@
 
-    //imports
-import React from 'react'
-import './App.css';
-import {useState} from 'react';
-import trash from './trash.svg';
-
-
+//imports ....you don't need to import react in a functional component
+// import React from 'react'
+import "./App.css";
+import { useState, useEffect } from "react";
+import trash from "./trash.svg";
 
 const App = () => {
-        //hooks
-    const [tasks, setTasks] = useState([''])
-    const [inputText, setInputText] = useState ('')
-    // // const [inputTextEditing, setInputTextoEditing] = React.useState(null);
-    // above was the hook for the editing button I couldn't get to work
+  //hooks
+  const [tasks, setTasks] = useState([]);
+  const [inputText, setInputText] = useState("");
+  // const [edit, setEdit] = useState(null); //not needed
+  // above was the hook for the editing button I couldn't get to work
 
-        //stores list so does not delete when re-loaded
-        React.useEffect(() => {
-            const json = localStorage.getItem("tasks");
-            const loadedTasks = JSON.parse(json);
-            if (loadedTasks) {
-              setTasks(loadedTasks);
-            }
-          }, []);
-        
-          React.useEffect(() => {
-            const json = JSON.stringify(tasks);
-            localStorage.setItem("tasks", json);
-          }, [tasks]);
-
-    //update text when inputted
-    const updateInputText = (event) => {
-    setInputText(event.target.value)
+  //stores list so does not delete when re-loaded- amazing!  You dont need to declare React at the beginning of hooks (only in class components), import them at the top instead
+  useEffect(() => {
+    const json = localStorage.getItem("tasks");
+    const loadedTasks = JSON.parse(json);
+    if (loadedTasks) {
+      setTasks(loadedTasks);
     }
+  }, []);
 
-//create list
-const addTask = () => {
-    const addList = [...tasks]
-    addList.push(inputText)
-    setTasks(addList)
-  }
+  useEffect(() => {
+    const json = JSON.stringify(tasks);
+    localStorage.setItem("tasks", json);
+  }, [tasks]);
 
-//edit list
-// This bit seems to work okay but it's the return that's dodgy
-// const editTask = () =>{
-//     const updatedTasks = [...tasks].map((tasks) => {
-//       if (tasks === tasks) {
-//         tasks.text = setInputText;
-//       }
-//       return tasks;
-//     });
-//     setTasks(updatedTasks);
-//     setInputTextoEditing(null);
-//   }
+  //update text when inputted
+  const updateInputText = (event) => {
+    setInputText(event.target.value);
+  };
 
-//delete item from list
+  //create list... changed each of the items to have seperate complete and text property
+  const addTask = () => {
+    const addList = [...tasks];
+    addList.push({ text: inputText, complete: false });
+    setTasks(addList);
+  };
+
+  //delete item from list
   const deleteTask = (index) => {
-    const deleteList = [...tasks]
-    deleteList.splice(index, 1)
-    setTasks(deleteList)
-  }
-//what will display on webpage
+    const deleteList = [...tasks];
+    deleteList.splice(index, 1);
+    setTasks(deleteList);
+  };
+
+  //function to handle complete click event when target is checked
+  const checkBox = (event, index) => {
+    const complete = event.target.checked;
+    const newTasks = tasks.slice();
+    newTasks[index].complete = complete;
+    setTasks(newTasks);
+  };
+
+  //what will display on webpage
   return (
     <div id="container">
       <h1 id="title">TO DO LIST</h1>
       <div id="formInput">
-          <div id= 'additemcontainer'>
-        <input id= 'typehere' placeholder="Type here" onChange={updateInputText}/>
-        <button data-testis = 'addTest' id= 'add' onClick={addTask}>Add</button>
+        <div id="additemcontainer">
+          <input
+            id="typehere"
+            placeholder="Type here"
+            onChange={updateInputText}
+          />
+          <button data-testis="addTest" id="add" onClick={addTask}>
+            Add
+          </button>
         </div>
         {tasks.map((item, index) => {
+          console.log(item);
           return (
-            <div id = 'todolist'>
+            // Added a onChange event to the input element,  added css for conditional rendering
+            <div
+              style={{
+                textDecoration: item.complete ? "line-through" : "",
+                color: item.complete ? "green" : "black",
+              }}
+              id="todolist"
+            >
+              <input
+                onChange={(e) => checkBox(e, index)}
+                value={item.complete}
+                type="checkbox"
+                defaultChecked={false}
+              />
 
-             <input type="checkbox" defaultChecked={false}/> 
-             {/* style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}> */}
-                {/* Trying to put line through text when clicked */}
+              <p id="box"> {item.text}</p>
 
-
-
-              <p id = 'box'> {item}</p>
-                {/* attempting edit button, not sure why I couldn't get this to works
-                {tasks.setInputTextoEditing === setInputTextoEditing ? (
-                  <button onClick={() => editTask(tasks.setInputTextoEditing)}>
-                    Re-Add
-                  </button>
-                ):(
-                  <button onClick={() => setInputTextoEditing (tasks.setInputTextoEditing)}>Edit</button>
-                )} */}
-
-              <button data-testid ='deletetest' onClick={deleteTask}>< img id = 'trash'src={trash} alt= 'delete'/></button>
-              
+              <button data-testid="deletetest" onClick={deleteTask}>
+                <img id="trash" src={trash} alt="delete" />
+              </button>
             </div>
-          )
-
+          );
         })}
       </div>
     </div>
-  )
-}
-export default App
+  );
+};
+export default App;
 
 
 
